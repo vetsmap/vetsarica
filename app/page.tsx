@@ -243,25 +243,45 @@ export default function Home() {
           background: '#ffffff', borderRadius: '12px', padding: '12px 16px',
           zIndex: 1000, boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
           border: '1px solid var(--borde)',
+          maxHeight: '60vh',
+          overflowY: 'auto',
         }}>
-          <p style={{ fontSize: '14px', fontWeight: 700, color: '#1a2e23', marginBottom: '6px' }}>{vetSeleccionado.nombre}</p>
+          <p style={{ fontSize: '14px', fontWeight: 700, color: '#1a2e23', marginBottom: '8px' }}>{vetSeleccionado.nombre}</p>
+
           <a
             href={`tel:${vetSeleccionado.telefono}`}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#ffffff', background: '#4F772D', padding: '6px 12px', borderRadius: '8px', textDecoration: 'none', fontWeight: 600, marginBottom: '8px' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#ffffff', background: '#4F772D', padding: '6px 12px', borderRadius: '8px', textDecoration: 'none', fontWeight: 600, marginBottom: '12px' }}
           >
             📞 Llamar
           </a>
+
           {vetSeleccionado.servicios?.length > 0 && (
-            <div>
+            <div style={{ marginBottom: '10px' }}>
               <p style={{ fontSize: '10px', color: '#33511c', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>Servicios</p>
               {vetSeleccionado.servicios.map(s => (
                 <div key={s.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '3px' }}>
                   <span style={{ color: '#1a2e23' }}>{s.nombre}</span>
                   <span style={{ color: '#33511c', fontWeight: 700 }}>
-                    {s.precio_min ? `$${s.precio_min.toLocaleString()}` : 'A consultar'}
+                    {s.precio_min ? s.precio_min === s.precio_max ? `$${s.precio_min.toLocaleString()}` : `$${s.precio_min.toLocaleString()} - $${s.precio_max?.toLocaleString()}` : 'A consultar'}
                   </span>
                 </div>
               ))}
+            </div>
+          )}
+
+          {vetSeleccionado.horarios?.length > 0 && (
+            <div>
+              <p style={{ fontSize: '10px', color: '#33511c', textTransform: 'uppercase', fontWeight: 700, marginBottom: '4px' }}>Horarios</p>
+              {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((dia, i) => {
+                const h = vetSeleccionado.horarios.find(horario => horario.dia_semana === i)
+                if (!h) return null
+                return (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '3px' }}>
+                    <span style={{ color: '#33511c' }}>{dia}</span>
+                    <span style={{ color: '#1a2e23', fontWeight: 500 }}>{h.hora_apertura.slice(0, 5)} - {h.hora_cierre.slice(0, 5)}</span>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
